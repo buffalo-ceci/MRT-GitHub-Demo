@@ -1,0 +1,17 @@
+name: Notify LINE on Pull Request
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send LINE Notify message
+        env:
+          LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+        run: |
+          curl -X POST https://notify-api.line.me/api/notify \
+          -H "Authorization: Bearer $LINE_NOTIFY_TOKEN" \
+          -F "message=有新的 Pull Request 被開啟了！請至 GitHub 查看詳情：${{ github.event.pull_request.html_url }}"
